@@ -1,0 +1,32 @@
+Erranta - conference broadcast system with slides
+=================================================
+
+Errantia is licensed under the AGPL 3.0 or later, as you can find in the
+AGPL.txt provided with these files.
+
+BEWARE
+------
+Errantia is not in a usable state. This is just out to show that it does exist
+in case anyone would like to help. But as of now, it's very much work in
+progress.
+
+Install
+-------
+Install orbited and stompservice
+
+Use
+---
+
+Edit graph.cfg to your liking.
+
+Run
+  orbited --config graph.cfg
+
+That will run orbited and it's internal development web server. Only use this for
+testing.
+
+Now, run the push-script.
+
+  python errantia_push.py
+
+And write in conference name and the presentations along with how many slides.

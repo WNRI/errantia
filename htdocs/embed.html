@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<title>Orbited + Morbid + js.io Graph</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="/static/Orbited.js"></script>
+<script>
+document.domain = document.domain;
+Orbited.settings.hostname = "comet.knut.s0.no";
+TCPSocket = Orbited.TCPSocket;
+</script>
+<script src="/static/protocols/stomp/stomp.js"></script>
+<style>
+    body, html, h1 {
+        font-family: sans-serif;
+	background-color: #fff;
+	color: #000;
+    }
+    #wrap {
+    /*width: 945px;*/
+    min-height: 300px;
+    }
+    #video {
+    width: 512px;
+    float: left;
+    }
+    #video h1 {
+    margin: 0;
+    text-align: center;
+    font-size: 12pt;
+    height: 20px;
+    background-color: #0A83CC;
+    color: #fff;
+    }
+      #video h1.waiting {
+      background-color: #ddd;
+      color: #555;
+      font-weight: normal;
+      }
+    #slidebox {
+    width: 384px;
+    height: 308px;
+    float:right;
+    background-color: #0A83CC;
+    color: #fff;
+    }
+    .slide {
+      height: auto; width: 100%;
+    }
+    #controls {
+    float: right;
+    margin: -1px 0 -7px;
+    }
+    #controls button {
+    font-size: 8pt;
+    background: #fff;
+    border: 1px solid #cce;
+    margin: 0 2px 4px 0;
+    }
+    .status {
+    float: left;
+    margin: 3px 0 2px 10px;
+    font-size: 0.8em;
+    }
+    .server {
+    color: #fff;
+    font-weight: bold;
+    margin-left: 1em;
+    }
+
+    #footer {
+    width: 100%;
+    clear: both;
+    font-size: 8pt;
+    text-align: right;
+    color: #aaa;
+    }
+    #footer p {
+    margin: 0;
+    }
+
+.error {
+background: #ffe;
+border: 1px solid #fcc;
+color: #f00;
+font-size: 20pt;
+margin: 0;
+position: absolute;
+text-align: center;
+top:10px;
+width:100%;
+</style>
+<script>
+    var curslide = 0;
+    var server_slide = 0;
+    var server_part;
+
+    var total = 0;
+    var img_url = "/img/"
+
+    var playing = true;
+
+    /* Objects */
+    var slide_img;
+    var play_b;
+    var status_p;
+    var error_p;
+
+    var logger;
+
+    var init_slide = function(container_name)
+    {
+        var container = document.getElementById(container_name);
+        status_p = document.createElement('p');
+        status_p.className = "status";
+        status_p.innerHTML = (curslide + 1) + "/" + total;
+        container.appendChild(status_p);
+        
+        controls = document.createElement('div');
+        controls.id = "controls";
+
+        play_b = document.createElement('button');
+        play_b.onclick = toggle_play;
+        play_b.innerHTML = "Stopp";
+        controls.appendChild(play_b);
+
+        prev_b = document.createElement('button');
+        prev_b.onclick = prev_slide;
+        prev_b.innerHTML = "Førre";
+        controls.appendChild(prev_b);
+
+        next_b = document.createElement('button');
+        next_b.onclick = next_slide;
+        next_b.innerHTML = "Neste";
+        controls.appendChild(next_b);
+
+        container.appendChild(controls);
+
+        slide_img = document.createElement('img');
+        slide_img.className = "slide";
+        slide_img.src = img_url + "ting-0.png";
+        container.appendChild(slide_img);
+
+    };
+
+    var update = function() {
+        slide_img.src = img_url + "ting-" + curslide + ".png";
+        
+        status_p.innerHTML = (curslide + 1) + "/" + server_part.part.slides;
+        if (server_part.part.active == true) {
+             document.getElementById("title").className = "direct";
+             document.getElementById("title").innerHTML = "Direkte: " + server_part.part.name;
+        }
+	else {
+             document.getElementById("title").className = "waiting";
+             document.getElementById("title").innerHTML = server_part.part.when + ": " + server_part.part.name;
+	}
+
+        if (curslide != server_slide)
+            status_p.innerHTML += " <small class='server'>Presentasjonen er på " + (server_slide + 1) + "</small>";
+    }
+
+    var next_slide = function() {
+        curslide++;
+
+        if (curslide >= total)
+            curslide = total-1;
+
+        update();
+    }
+
+    var prev_slide = function() {
+        curslide--;
+
+        if (curslide < 0)
+            curslide = 0;
+
+        update();
+    }
+
+    var toggle_play = function() {
+        if (playing == true)
+        {
+            playing = false;
+            play_b.innerHTML = 'Spel';
+        }
+        else
+        {
+            playing = true;
+            play_b.innerHTML = 'Stopp';
+            curslide = server_slide;
+        }
+        update();
+    }
+
+    var conn = function() {
+        stomp.connect('stomp.knut.s0.no', 61613);
+    }
+
+    // In production use your js toolkit's onload system, or event listeners
+    onload = function() {
+	var first_try = true;
+
+        stomp = new STOMPClient();
+	logger = Orbited.getLogger("errantia");
+	logger.enabled = true;
+	var reconnectTimer = null;
+
+	stomp.onopen = function() {
+		logger.debug("Opna");
+		if(reconnectTimer) window.clearTimeout(reconnectTimer);
+            	document.getElementById("wrap").removeChild(error_p);
+	};
+        stomp.onclose = function(c) {
+            //alert('Lost Connection, Code: ' + c);
+            error_p = document.createElement('p');
+            error_p.className = 'error';
+            error_p.innerHTML = "Mista tilkoplinga til presentasjonen. Du kann gjera ting manuelt elder lasta sida om (F5)";
+            document.getElementById("wrap").appendChild(error_p);
+	    logger.debug('Lost Connection, Code:' + c);
+	    reconnectTimer = window.setTimeout(conn, 1000); // TODO: autoincrease with cap
+        };
+        stomp.onerror = function(error) {
+            //alert("Error: " + error);
+	    logger.error("Error: " + error);
+            status_p.innerHTML = "Noko gale hende (" + error + "). Truleg best å lasta sida om (F5)";
+        };
+        stomp.onerrorframe = function(frame) {
+            //alert("Error: " + frame.body);
+	    logger.error("Errorframe: " + frame.body);
+            status_p.innerHTML = "Bah, noko gale hende (" + frame.body + "). Truleg best å lasta sida om (F5)";
+        };
+        stomp.onconnectedframe = function() {
+            stomp.subscribe("/topic/graph2");
+            var xmlhttp=new XMLHttpRequest();
+            xmlhttp.open("GET", "/first.json", false);
+            xmlhttp.send();
+
+            var vals = JSON.parse(xmlhttp.responseText);
+	    logger.debug(vals);
+            server_part = vals;
+            server_slide = vals.part.slide;
+            total = vals.part.slides;
+	    logger.debug('Connected frame ' + server_slide + '/' + total);
+            
+            curslide = server_slide;
+
+	    // Berre init fyrste gong
+	    if (first_try == true) {
+                init_slide("slidebox");
+		first_try = false;
+	    }
+            update();
+
+        };
+        stomp.onmessageframe = function(frame) {
+            logger.debug(frame)
+            var vals = JSON.parse(frame.body);
+	    logger.debug(vals);
+            server_part = vals;
+            server_slide = vals.part.slide;
+            if (playing)
+                curslide = server_slide;
+
+            update();
+        };
+
+	conn();
+    }
+</script>
+
+<div id="wrap">
+  <div id="video">
+  <h1 id="title">Direktesending</h1>
+  <!-- ekte feed -->
+  <video src="http://video.knut.s0.no/video.ogv" controls="controls" autoplay="autoplay" height="384" width="512" loop="nolooping">
+
+   <!-- CORTADO FALLBACK!!!!! :P -->
+    <applet code="com.fluendo.player.Cortado.class" archive="http://theora.org/cortado.jar" width="512" height="384">
+      <param name="url" value="http://video.knut.s0.no/video.ogv"/>
+    </applet>
+  </video>
+</div>
+
+<aside id="slidebox"></aside>
+
+<div id="footer">
+  <p>Errantia, av Odin H&oslash;rthe Omdal
+</div>
+
+</body>
+</html>
