@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% block title %}<h1>{{ conf }}</h1>{% endblock %}
+
+<div id="function-box">
+  <div id="video">
+    <video id="video-tag" src="http://video.knut.s0.no/video.ogv" width="600" height="480" controls="controls" autoplay="autoplay">
+    <applet code="com.fluendo.player.Cortado.class" archive="http://theora.org/cortado.jar" width="600" height="480">
+      <param name="url" value="http://video.knut.s0.no/video.ogv"/>
+    </applet>
+    </video>
+  </div>
+
+  <div id="chat">
+    <div id="chat-box"></div>
+    <!-- You should try to include this at another place at your convenience :D -->
+    <script type="text/javascript" src="/static/js/jchat.js"></script>
+    <script type="text/javascript" src="/static/js/video_reload.js"></script>
+    <script type="text/javascript">
+    /* chat_id is passed form the view, the init_chat function then does all the magic */
+    $(window).ready(function() {
+      init_chat({{chat_id}}, "chat-box");
+      init_videoreload("video-tag");
+    });
+    </script>
+  </div>
+
+  <div id="slides">
+    {#% if conf.conf_image %}<img src="{{ conf.conf_image }}">{% endif %#}
+  </div>
+</div>
+{% endblock %}
