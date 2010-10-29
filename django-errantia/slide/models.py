@@ -1,4 +1,9 @@
 from django.db import models
+from django.forms import ModelForm
+from django.core import serializers
+import urllib
+import urllib2
+
 from conference.models import Talk
 
 def upload_folder(instance, filename):
@@ -16,7 +21,21 @@ class Slide(models.Model):
         except Slide.DoesNotExist:
             self.num = 0
 
+        payload = urllib.quote_plus("{slide: '%s', num: %d}" % (self.slide.url, self.num,))
+        url = 'http://%s/rest/publish?secret=%s&channel_name=%s&payload="%s"' % \
+            ('velmont.hosted.hookbox.org', 'odin-rest', 'errantia-slides', payload,)
+        print url
+        try:
+            print urllib2.urlopen(url).read()
+        except urllib2.HTTPError:
+            pass
+
         super(Slide, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return u'%s:%d' % (self.talk, self.num)
+
+class SlideForm(ModelForm):
+    class Meta:
+        model = Slide
+        exclude = ('talk',)
