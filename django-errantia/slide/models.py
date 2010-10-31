@@ -21,7 +21,7 @@ class Slide(models.Model):
         except Slide.DoesNotExist:
             self.num = 0
 
-        payload = urllib.quote_plus("{slide: '%s', num: %d}" % (self.slide.url, self.num,))
+        payload = urllib.quote_plus('{"slide": "%s", "num": %d}' % (self.slide.url, self.num,))
         url = 'http://%s/rest/publish?secret=%s&channel_name=%s&payload="%s"' % \
             ('velmont.hosted.hookbox.org', 'odin-rest', 'errantia-slides', payload,)
         print url
