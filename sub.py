@@ -28,13 +28,14 @@ pipeline = gst.parse_launch("""
 videotestsrc
   ! video/x-raw-yuv,width=640,height=360,framerate=15/1
   ! textoverlay text="Hello" name="overlay" font-desc="Ubuntu 26" line-alignment=left halign=left valign=bottom shaded-background=true
-  ! ffmpegcolorspace
-  ! theoraenc bitrate=500 keyframe-force=64
-  ! queue
-  ! oggmux
-  ! queue
-  ! shout2send ip=video.knut.s0.no port=80 password=sTeodorx2 mount=/sub.ogv
-  """)
+  ! xvimagesink sync="false" """)
+#  ! ffmpegcolorspace
+#  ! theoraenc bitrate=500 keyframe-force=64
+#  ! queue
+#  ! oggmux
+#  ! queue
+#  ! shout2send ip=video.knut.s0.no port=80 password=sTeodorx2 mount=/sub.ogv
+#  """)
 
 overlay = pipeline.get_by_name('overlay')
 overlay.count = 0
