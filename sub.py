@@ -7,12 +7,22 @@ import gobject
 import gst
 import os
 
-FIFOFILE = "sub"
+if FIFO:
+    FIFOFILE = "sub"
 
-if not os.path.exists(FIFOFILE):
-    os.mkfifo(FIFOFILE)
+    if not os.path.exists(FIFOFILE):
+        os.mkfifo(FIFOFILE)
 
-f = open(FIFOFILE, "r")
+    f = open(FIFOFILE, "r")
+
+sock = socket.socket()
+sock.bind(("0.0.0.0", 7367,))
+sock.listen(1)
+
+# repeat this
+conn = sock.accept()
+f = conn[0].makefile()
+buf = f.read()
 
 pipeline = gst.parse_launch("""
 videotestsrc
