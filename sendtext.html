@@ -6,13 +6,46 @@
 
 <body>
 <script type="text/javascript">
-function send_text(this) {
-  this.value;
+var data = {};
+var ws = null;
+var text = null;
+
+function send_text(e) {
+  ws.send(text.value);
+  data.subs.push(text.value);
+  render_sub(text.value);
+
+  text.value = "";
+
+  return false;
+}
+
+function render_sub(sub) {
+  a = document.createElement("div");
+  a.innerHTML = sub;
+
+  document.getElementById("form").insertBefore(a, text.nextElementSibling);
+}
+
+function render_subs() {
+  for(sub in data.subs) {
+    render_sub(sub);
+  }
+}
+
+window.onload = function() {
+  ws = new WebSocket("ws://127.0.0.1:7000/data");
+  data.subs = new Array();
+
+  text = document.getElementById("text");
+  document.getElementById("form").onsubmit = send_text;
 }
 </script>
 
 <h1>Texting</h1>
-<input id="text">
+<form id="form">
+<input type="text" id="text">
+</form>
 
 </body>
 
