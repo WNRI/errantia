@@ -6,26 +6,22 @@
 import gobject
 import gst
 import os
+import socket
 
-FIFO=True
-FIFOFILE = "sub"
+FIFO=False
+COMMFILE = "/tmp/errantia-sub"
+LOGFILE = "sub.log"
+
+if os.path.exists(COMMFILE):
+    os.remove(COMMFILE)
 
 if FIFO:
-
-    if not os.path.exists(FIFOFILE):
-        os.mkfifo(FIFOFILE)
-
-    f = open(FIFOFILE, "r")
+    os.mkfifo(COMMFILE)
+    f = open(COMMFILE, "r")
 
 else:
-    sock = socket.socket()
-    sock.bind(("0.0.0.0", 7367,))
-    sock.listen(1)
-
-    # repeat this
-    conn = sock.accept()
-    f = conn[0].makefile()
-    buf = f.read()
+    sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+    sock.bind(COMMFILE)
 
 pipeline = gst.parse_launch("""
 videotestsrc
@@ -41,22 +37,18 @@ videotestsrc
 #  """)
 
 overlay = pipeline.get_by_name('overlay')
-overlay.count = 0
-
 pipeline.set_state(gst.STATE_PLAYING)
 
 def timer(user_data, f):
-    user_data.count += 1
-    line = f.read()
+    line = f.recv(1024)
     if (line):
        user_data.set_property('text', line)
     return True
 
 
-gobject.timeout_add_seconds(1, timer, overlay, f)
+gobject.timeout_add_seconds(1, timer, overlay, sock)
 
 loop = gobject.MainLoop()
 loop.run()
 
-f.close()
-os.unlink(FIFOFILE)
+sock.close()

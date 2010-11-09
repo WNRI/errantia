@@ -2,30 +2,23 @@
 import eventlet
 from eventlet import wsgi
 from eventlet import websocket
-
-# demo app
+from eventlet.green import socket
 import os
-import random
 
-FIFOFILE = "sub"
-f = open(FIFOFILE, "a")
+sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+sock.connect("/tmp/errantia-sub")
 
 @websocket.WebSocketWSGI
 def handle(ws):
     """  This is the websocket handler function.  Note that we 
     can dispatch based on path in here, too."""
-    global f
 
     if ws.path == '/data':
         while True:
             m = ws.wait()
             if m is None:
                 break
-            print m
-	    f.write(m.encode('utf-8'));
-	    f.flush();
-	    f.close();
-            f = open(FIFOFILE, "a")
+            sock.send(m.encode("utf-8"))
 
 def dispatch(environ, start_response):
     """ This resolves to the web page or the websocket depending on
