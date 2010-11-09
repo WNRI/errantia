@@ -7,6 +7,7 @@ import gobject
 import gst
 import os
 import socket
+from datetime import datetime
 
 FIFO=False
 COMMFILE = "/tmp/errantia-sub"
@@ -22,6 +23,9 @@ if FIFO:
 else:
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
     sock.bind(COMMFILE)
+
+sublog = open(LOGFILE, "a")
+sublog.write("- start %s\n" % datetime.now())
 
 pipeline = gst.parse_launch("""
 videotestsrc
@@ -42,6 +46,7 @@ pipeline.set_state(gst.STATE_PLAYING)
 def timer(user_data, f):
     line = f.recv(1024)
     if (line):
+       sublog.write("%s,%s\n" % (datetime.now(), line,) )
        user_data.set_property('text', line)
     return True
 
