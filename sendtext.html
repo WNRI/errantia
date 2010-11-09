@@ -11,9 +11,45 @@
  margin: 0 auto;
  position: relative;
  }
- #video-frame > div {
+ .fancywrap {
  position: absolute;
  bottom: 0;
+ }
+ #frame-help {
+ border: 2px solid #7c7;
+ position: absolute;
+ right: -97px;
+ bottom: 10px;
+ padding: 5px;
+ font: 9pt/11pt "Ubuntu", "Arial";
+ background-color: #afa;
+ width: 75px;
+ border-radius: 5px;
+ -moz-border-radius: 5px;
+ -moz-transition: opacity 1s, right 1s;
+ opacity: 1;
+ }
+ #frame-help.hide {
+  position: absolute;
+  opacity: 0;
+  right: -115px;
+ }
+ .arrow, .arrow-border {
+  display: block;
+  border-color: transparent #afa transparent transparent;
+  border-style: solid;
+  border-width: 8px;
+  height:0;
+  width:0;
+  position: absolute;
+  left: -14px;
+  top: 10px;
+  z-index: 2;
+ }
+ .arrow-border {
+  border-color: transparent #7c7 transparent transparent;
+  left: -17px;
+  z-index: 1;
  }
  #video {
  width: 400px;
@@ -77,6 +113,8 @@ function input_keypress(e) {
     /* Enter */
     send_text();
     text.focus();
+    document.getElementById("frame-help").classList.add("hide");
+
     e.preventDefault();
     return false;
   }
@@ -94,13 +132,15 @@ window.onload = function() {
   text.onkeypress = input_keypress;
 
   text.focus();
+  document.getElementById("frame-help").classList.remove("hide");
 }
 </script>
 
 <h1>Texting</h1>
 <div id="video-frame">
+  <div id="frame-help" class="hide">Write text in the frame and press enter<span class="arrow"></span><span class="arrow-border"></div>
   <img src="http://dmacwilliam.files.wordpress.com/2007/10/800px-smpte_color_bars_16x9svg.png" id="video">
-  <div><div id="fancyinput"></div></div>
+  <div class="fancywrap"><div id="fancyinput"></div></div>
 </div>
 
 <div id="history"></div>
