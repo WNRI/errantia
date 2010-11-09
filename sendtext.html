@@ -2,6 +2,44 @@
 <html>
 <head>
  <title>Texting</title>
+ <style type="text/css" rel="stylesheet">
+ h1 { display: none; }
+ #video-frame {
+ width: 400px;
+ height: 300px;
+ background-color: #ccc;
+ margin: 0 auto;
+ position: relative;
+ }
+ #video-frame > div {
+ position: absolute;
+ bottom: 0;
+ }
+ #video {
+ width: 400px;
+ height: 300px;
+ z-index: -2;
+ }
+ #fancyinput {
+ font: 30pt/40pt "Ubuntu", "Arial";
+ min-height: 1.5em;
+ display: inline;
+ color: #fff;
+ background-color: rgba(0,0,0,0.5);
+ outline: none 0;
+ }
+ #history {
+ font: 30pt/40pt "Ubuntu", "Arial";
+ color: #ccc;
+ width: 400px;
+ margin: 0 auto;
+ }
+ #history > div {
+ border-top: 5px solid #ccc;
+ margin-top: 1em;
+ }
+
+ </style>
 </head>
 
 <body>
@@ -9,13 +47,14 @@
 var data = {};
 var ws = null;
 var text = null;
+var hist = null;
 
 function send_text(e) {
-  ws.send(text.value);
-  data.subs.push(text.value);
-  render_sub(text.value);
+  ws.send(text.textContent);
+  data.subs.push(text.textContent);
+  render_sub(text.textContent);
 
-  text.value = "";
+  text.textContent = "";
 
   return false;
 }
@@ -24,7 +63,7 @@ function render_sub(sub) {
   a = document.createElement("div");
   a.innerHTML = sub;
 
-  document.getElementById("form").insertBefore(a, text.nextElementSibling);
+  hist.insertBefore(a, hist.firstElementChild);
 }
 
 function render_subs() {
@@ -33,19 +72,38 @@ function render_subs() {
   }
 }
 
+function input_keypress(e) {
+  if (e.keyCode == 13 || e.charCode == 13) {
+    /* Enter */
+    send_text();
+    text.focus();
+    e.preventDefault();
+    return false;
+  }
+}
+
 window.onload = function() {
   ws = new WebSocket("ws://127.0.0.1:7000/data");
   data.subs = new Array();
 
-  text = document.getElementById("text");
-  document.getElementById("form").onsubmit = send_text;
+  text = document.getElementById("fancyinput");
+  hist = document.getElementById("history");
+  document.getElementById("video-frame").onclick = function() { text.focus(); };
+
+  text.contentEditable = true;
+  text.onkeypress = input_keypress;
+
+  text.focus();
 }
 </script>
 
 <h1>Texting</h1>
-<form id="form">
-<input type="text" id="text">
-</form>
+<div id="video-frame">
+  <img src="http://dmacwilliam.files.wordpress.com/2007/10/800px-smpte_color_bars_16x9svg.png" id="video">
+  <div><div id="fancyinput"></div></div>
+</div>
+
+<div id="history"></div>
 
 </body>
 
