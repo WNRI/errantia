@@ -29,8 +29,8 @@ sublog.write("- start %s\n" % datetime.now())
 
 pipeline = gst.parse_launch("""
 videotestsrc
-  ! video/x-raw-yuv,width=640,height=360,framerate=15/1
-  ! textoverlay text="Hello" name="overlay" font-desc="Ubuntu 26" line-alignment=left halign=left valign=bottom shaded-background=true
+  ! video/x-raw-yuv,width=500,height=375,framerate=15/1
+  ! textoverlay text="Hello" name="overlay" font-desc="Ubuntu 26" line-alignment=left halign=left valign=bottom shaded-background=true xpad=0 ypad=15
   ! xvimagesink sync="false" """)
 #  ! ffmpegcolorspace
 #  ! theoraenc bitrate=500 keyframe-force=64
