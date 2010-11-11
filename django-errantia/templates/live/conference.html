@@ -20,7 +20,7 @@
     <script type="text/javascript" src="/static/js/video_reload.js"></script>
     <script type="text/javascript">
 var slides;
-var slide_now = 0;
+var slide_now = undefined;
 
 var conn;
 var slide_sub;
@@ -55,10 +55,9 @@ function init_slides() {
         console.log("Kopla til " + ch_name);
     }
 
-    var html = '<div id="slide-info" style="color: #fff; background: rgba(0,0,0,0.5); padding: 2px 5px; position: absolute; bottom: 0; right: 0;"></div>';
-
+    var html = '<div id="slide-info" style="color: #fff; background: rgba(0,0,0,0.5); padding: 2px 5px; position: absolute; top: 0; right: 0;"></div>';
     $("#slides").append(html);
-    $("#slides").css("display", "block");
+    $("#slides").attr("style", "");
 
     $("#slide-info").append($("<span class='btn back'>&larr; </span>").click(prev_slide));
     $("#slide-info").append('<span id="slide-status" style="">-</span></div>');
@@ -80,6 +79,9 @@ function get_slides() {
 }
 
 function update_slide_info() {
+    if (slide_now == undefined)
+        return;
+
     $("#slide-status")[0].innerHTML = (slide_now + 1) + "/" + slides.length;
 
     if (slide_now == slides.length - 1)
@@ -104,6 +106,9 @@ function update_talk_info() {
 }
 
 function next_slide() {
+    if (slide_now == undefined)
+        return;
+
     if (slide_now >= slides.length - 1)
         return;
 
@@ -112,6 +117,9 @@ function next_slide() {
 }
 
 function prev_slide() {
+    if (slide_now == undefined)
+        return;
+
     if (slide_now == 0)
         return;
 
