@@ -128,8 +128,10 @@ function prev_slide() {
     </script>
   </div>
 
-  <div id="slides">
-    <img src="{{ conf.conf_image|default:"" }}" id="slide-active">
+  <div id="slides" style="display:none;">
+    <div class="valign">
+      <img src="{{ conf.conf_image|default:"" }}" id="slide-active">
+    </div>
   </div>
 </div>
 {% endblock %}
