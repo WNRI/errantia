@@ -72,7 +72,9 @@ function get_slides() {
         url: '/api/slide/{{ conf.slug }}/',
         dataType: 'json',
         success: function (json) {
-            window.slides = json;
+            slides = json;
+            if(slides[0] && slide_now == undefined)
+                slide_now=0;
             update_slide_info();
         }
     });
