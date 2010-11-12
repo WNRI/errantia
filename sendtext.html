@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Texting</title>
+ <style type="text/css" rel="stylesheet">
+ h1 { display: none; }
+ #video-frame {
+ width: 500px;
+ height: 375px;
+ background-color: #ccc;
+ margin: 0 auto;
+ position: relative;
+ }
+ .fancywrap {
+ position: absolute;
+ bottom: 0;
+ padding: 15px;
+ }
+ #frame-help {
+ border: 2px solid #7c7;
+ position: absolute;
+ right: -97px;
+ bottom: 10px;
+ padding: 5px;
+ font: 9pt/11pt "Ubuntu", "Arial";
+ background-color: #afa;
+ width: 75px;
+ border-radius: 5px;
+ -moz-border-radius: 5px;
+ -moz-transition: opacity 1s, right 1s;
+ opacity: 1;
+ }
+ #frame-help.hide {
+  position: absolute;
+  opacity: 0;
+  right: -115px;
+ }
+ .arrow, .arrow-border {
+  display: block;
+  border-color: transparent #afa transparent transparent;
+  border-style: solid;
+  border-width: 8px;
+  height:0;
+  width:0;
+  position: absolute;
+  left: -14px;
+  top: 10px;
+  z-index: 2;
+ }
+ .arrow-border {
+  border-color: transparent #7c7 transparent transparent;
+  left: -17px;
+  z-index: 1;
+ }
+ #video {
+ width: 500px;
+ height: 375px;
+ z-index: -2;
+ }
+ #fancyinput {
+ font: 20pt "Ubuntu", "Arial";
+ min-height: 1.5em;
+ display: inline;
+ color: #fff;
+ background-color: rgba(0,0,0,0.5);
+ outline: none 0;
+ }
+ #history {
+ font: 20pt "Ubuntu", "Arial";
+ color: #ccc;
+ width: 500px;
+ margin: 0 auto;
+ }
+ #history > div {
+ border-top: 5px solid #ccc;
+ margin-top: 1em;
+ padding: 15px;
+ }
+
+ </style>
+</head>
+
+<body>
+<script type="text/javascript">
+var data = {};
+var ws = null;
+var text = null;
+var hist = null;
+
+function send_text(e) {
+  ws.send(text.textContent);
+  data.subs.push(text.textContent);
+  render_sub(text.textContent);
+
+  text.textContent = "";
+
+  return false;
+}
+
+function render_sub(sub) {
+  a = document.createElement("div");
+  a.innerHTML = sub;
+
+  hist.insertBefore(a, hist.firstElementChild);
+}
+
+function render_subs() {
+  for(sub in data.subs) {
+    render_sub(sub);
+  }
+}
+
+function input_keypress(e) {
+  if (e.keyCode == 13 || e.charCode == 13) {
+    /* Enter */
+    send_text();
+    text.focus();
+    document.getElementById("frame-help").classList.add("hide");
+
+    e.preventDefault();
+    return false;
+  }
+}
+
+window.onload = function() {
+  ws = new WebSocket("ws://127.0.0.1:7000/data");
+  data.subs = new Array();
+
+  text = document.getElementById("fancyinput");
+  hist = document.getElementById("history");
+  document.getElementById("video-frame").onclick = function() { text.focus(); };
+
+  text.contentEditable = true;
+  text.onkeypress = input_keypress;
+
+  text.focus();
+  document.getElementById("frame-help").classList.remove("hide");
+}
+</script>
+
+<h1>Texting</h1>
+<div id="video-frame">
+  <div id="frame-help" class="hide">Write text in the frame and press enter<span class="arrow"></span><span class="arrow-border"></div>
+  <img src="http://dmacwilliam.files.wordpress.com/2007/10/800px-smpte_color_bars_16x9svg.png" id="video">
+  <div class="fancywrap"><div id="fancyinput"></div></div>
+</div>
+
+<div id="history"></div>
+
+</body>
+
+</html>
