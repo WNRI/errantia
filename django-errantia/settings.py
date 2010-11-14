@@ -92,4 +92,5 @@ INSTALLED_APPS = (
     'conference',
     'slide',
     'piston',
+    'south',
 )
