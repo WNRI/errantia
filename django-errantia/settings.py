@@ -1,4 +1,6 @@
-# Django settings for project project.
+# vim: ts=4 sw=4 expandtab ai
+import os
+PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -11,12 +13,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/srv/www/errantia.s0.no/project/db.sqlite',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(PROJECT_PATH, 'db.sqlite'),
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
     }
 }
 
@@ -45,7 +47,7 @@ USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '/srv/www/errantia.s0.no/project/static/'
+MEDIA_ROOT = os.path.join(PROJECT_PATH, 'static/')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -78,7 +80,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'project.urls'
 
 TEMPLATE_DIRS = (
-    '/srv/www/errantia.s0.no/project/templates',
+    os.path.join(PROJECT_PATH, 'templates'),
 )
 
 INSTALLED_APPS = (
