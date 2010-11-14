@@ -2,7 +2,7 @@ from django.db import models
 
 STATES = (
   ('wait', 'Waiting'),
-  ('rec', 'Recording'),
+  ('live', 'Live'),
   ('done', 'Archived'),
 )
 
