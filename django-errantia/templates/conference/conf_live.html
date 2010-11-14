@@ -5,9 +5,9 @@
 
 <div id="function-box">
   <div id="video">
-    <video id="video-tag" src="a" width="600" height="480" controls="controls" autoplay="autoplay">
+    <video id="video-tag" src="http://video.knut.s0.no/video.ogv" width="600" height="480" controls="controls" autoplay="autoplay">
     <applet code="com.fluendo.player.Cortado.class" archive="http://theora.org/cortado.jar" width="600" height="480">
-      <param name="url" value="a"/>
+      <param name="url" value="http://video.knut.s0.no/video.ogv"/>
     </applet>
     </video>
   </div>
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="/static/js/video_reload.js"></script>
     <script type="text/javascript">
 var slides;
-var slide_now = 0;
+var slide_now = undefined;
 
 var conn;
 var slide_sub;
@@ -55,10 +55,9 @@ function init_slides() {
         console.log("Kopla til " + ch_name);
     }
 
-    var html = '<div id="slide-info" style="color: #fff; background: rgba(0,0,0,0.5); padding: 2px 5px; position: absolute; bottom: 0; right: 0;"></div>';
-
+    var html = '<div id="slide-info" style="color: #fff; background: rgba(0,0,0,0.5); padding: 2px 5px; position: absolute; bottom: 0; left: 0;"></div>';
     $("#slides").append(html);
-    $("#slides").css("display", "block");
+    $("#slides").attr("style", "");
 
     $("#slide-info").append($("<span class='btn back'>&larr; </span>").click(prev_slide));
     $("#slide-info").append('<span id="slide-status" style="">-</span></div>');
@@ -73,13 +72,18 @@ function get_slides() {
         url: '/api/slide/{{ conf.slug }}/',
         dataType: 'json',
         success: function (json) {
-            window.slides = json;
+            slides = json;
+            if(slides[0] && slide_now == undefined)
+                slide_now=0;
             update_slide_info();
         }
     });
 }
 
 function update_slide_info() {
+    if (slide_now == undefined)
+        return;
+
     $("#slide-status")[0].innerHTML = (slide_now + 1) + "/" + slides.length;
 
     if (slide_now == slides.length - 1)
@@ -104,6 +108,9 @@ function update_talk_info() {
 }
 
 function next_slide() {
+    if (slide_now == undefined)
+        return;
+
     if (slide_now >= slides.length - 1)
         return;
 
@@ -112,6 +119,9 @@ function next_slide() {
 }
 
 function prev_slide() {
+    if (slide_now == undefined)
+        return;
+
     if (slide_now == 0)
         return;
 
@@ -122,14 +132,16 @@ function prev_slide() {
     /* chat_id is passed form the view, the init_chat function then does all the magic */
     $(window).ready(function() {
       init_slides();
-      //init_chat({{chat_id}}, "chat-box");
-      //init_videoreload("video-tag");
+      init_chat({{chat_id}}, "chat-box");
+      init_videoreload("video-tag");
     });
     </script>
   </div>
 
-  <div id="slides">
-    <img src="{{ conf.conf_image|default:"" }}" id="slide-active">
+  <div id="slides" style="display:none;">
+    <div class="valign">
+      <img src="{{ conf.conf_image|default:"" }}" id="slide-active">
+    </div>
   </div>
 </div>
 {% endblock %}
