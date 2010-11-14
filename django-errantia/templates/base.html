@@ -44,18 +44,27 @@ left: 360px;
 position: absolute;
 top: 0;
 left: 0;
-height: 480px;
+height: 250px;
 }
 #slides {
-display: none;
+display: table;
 position: absolute;
-top: 0;
-left: 360px;
-width: 600px;
-height: 480px;
+top: 250px;
+left: 0;
+width: 360px;
+height: 250px;
+overflow:hidden;
+text-align: center;
+}
+.valign {
+/*display: table-cell;*/
+vertical-align: middle;
+height: 250px;
+overflow:hidden;
+width: 360px;
 }
 #chat-messages-container {
-height: 450px; /* 192 - 25 */
+height: 220px; /* 192 - 25 */
 overflow: auto; /* used for scrolling */
 font: 9pt "Arial", sans-serif;
 }

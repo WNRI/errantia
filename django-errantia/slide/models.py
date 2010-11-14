@@ -18,11 +18,11 @@ class Slide(models.Model):
     def save(self, *args, **kwargs):
         try:
             self.num = Slide.objects.filter(talk=self.talk).order_by('-num')[0].num + 1
-        except Slide.DoesNotExist:
+        except (Slide.DoesNotExist, IndexError):
             self.num = 0
 
         payload = urllib.quote_plus('{"slide": "%s", "num": %d}' % (self.slide.url, self.num,))
-        url = 'http://%s/rest/publish?secret=%s&channel_name=%s&payload="%s"' % \
+        url = 'http://%s/rest/publish?secret=%s&channel_name=%s&payload=%s' % \
             ('velmont.hosted.hookbox.org', 'odin-rest', 'errantia-slides', payload,)
         print url
         try:
