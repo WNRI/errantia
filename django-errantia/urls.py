@@ -8,7 +8,6 @@ admin.autodiscover()
 urlpatterns = patterns('',
     (r'^$', 'django.views.generic.simple.redirect_to', {'url':'/live/clim-atic-2010/', 'permanent': False}),
     (r'^conf/', include('conference.urls')),
-    (r'^live/', include('live.urls')),
     (r'^chat/', include('jchat.urls')),
     (r'^api/', include('api.urls')),
 
