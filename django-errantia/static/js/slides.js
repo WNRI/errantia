@@ -1,9 +1,6 @@
 var slides;
 var slide_now = undefined;
 
-var conf = {}
-
-var conn;
 var slide_sub;
 var conf_sub;
 
@@ -13,12 +10,9 @@ function init_slides(conf_slug, conf_state) {
 
     get_slides();
 
-    conn = hookbox.connect('http://velmont.hosted.hookbox.org/');
-    conn.subscribe('errantia-slides');
-    conn.subscribe('errantia-chat');
-    conn.subscribe('errantia-talk');
+    conf.ws.subscribe('errantia-slides');
 
-    conn.onSubscribed = function(ch_name, subscription) {
+    conf.ws.onSubscribed = function(ch_name, subscription) {
         if (ch_name == "errantia-slides")
         {
             slide_conn = subscription;
@@ -31,7 +25,7 @@ function init_slides(conf_slug, conf_state) {
         {
             conf_sub = subscription;
             conf_sub.onPublish = function(frame) {
-                conf = $.parseJSON(frame.payload);
+                conf.talk = $.parseJSON(frame.payload);
                 update_talk_info();
             }
         }

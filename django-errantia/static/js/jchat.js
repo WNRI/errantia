@@ -2,6 +2,8 @@ var chat_room_id = undefined;
 var chat_name = undefined;
 var last_received = 0;
 
+var chat_conn;
+
 /**
  * Initialize chat:
  * - Set the room id
@@ -11,8 +13,20 @@ var last_received = 0;
  * @param html_el_id the id of the html element where the chat html should be placed
  * @return
  */
-function init_chat(chat_id, html_el_id) {
+function init_chat(chat_id, html_el_id)
+{
     chat_room_id = chat_id;
+
+    conf.ws.subscribe('errantia-chat:' + chat_room_id);
+    conf.ws.onSubscribed = function(ch_name, subscription)
+    {
+        if (ch_name == 'errantia-chat:' + chat_room_id)
+        {
+	    chat_conn = subscription;
+	    chat_conn.onPublish = got_msg;
+        }
+        console.log("Kopla til " + ch_name);
+    }
     layout_and_bind(html_el_id);
     sync_messages();
 }
@@ -37,8 +51,6 @@ function sync_messages() {
                 last_received = 0;
         }        
     });
-    
-    setTimeout("get_messages()", 2000);
 }
 
 /**
@@ -97,45 +109,31 @@ function send_msg() {
 /**
  * Gets the list of messages from the server and appends the messages to the chatbox
  */
-function get_messages() {
-    $.ajax({
-        type: 'POST',
-        data: {id:window.chat_room_id, offset: window.last_received, name:window.chat_name},
-        url:'/chat/receive/',
-        dataType: 'json',
-        success: function (json) {
-            var scroll = false;
-        
-            // first check if we are at the bottom of the div, if we are, we shall scroll once the content is added
-            var $containter = $("#chat-messages-container");
-            if ($containter.scrollTop() == $containter.attr("scrollHeight") - $containter.height())
-                scroll = true;
+function got_msg(frame)
+{
+    m = frame.payload;
+    var scroll = false;
 
-            // add messages
-            $.each(json, function(i,m) {
-                if (m.id <= last_received)
-                    return;
+    // first check if we are at the bottom of the div, if we are, we shall scroll once the content is added
+    var $containter = $("#chat-messages-container");
+    if ($containter.scrollTop() == $containter.attr("scrollHeight") - $containter.height())
+        scroll = true;
 
-                if (m.type == 's')
-                    $('#chat-messages').append('<div class="system">' + replace_emoticons(m.message) + '</div>');
-                else if (m.type == 'm')     
-                    $('#chat-messages').append('<div class="message"><div class="author">'+m.author+'</div>'+replace_emoticons(m.message) + '</div>');
-                else if (m.type == 'j')     
-                    $('#chat-messages').append('<div class="join">'+m.author+' has joined</div>');
-                else if (m.type == 'l')     
-                    $('#chat-messages').append('<div class="leave">'+m.author+' has left</div>');
-                    
-                last_received = m.id;
-            })
-            
-            // scroll to bottom
-            if (scroll)
-                $("#chat-messages-container").animate({ scrollTop: $("#chat-messages-container").attr("scrollHeight") }, 500);
-        }        
-    });
+    // add message
+    if (m.type == 's')
+        $('#chat-messages').append('<div class="system">' + replace_emoticons(m.message) + '</div>');
+    else if (m.type == 'm')
+        $('#chat-messages').append('<div class="message"><div class="author">'+m.author+'</div>'+replace_emoticons(m.message) + '</div>');
+    else if (m.type == 'j')
+        $('#chat-messages').append('<div class="join">'+m.author+' has joined</div>');
+    else if (m.type == 'l')
+        $('#chat-messages').append('<div class="leave">'+m.author+' has left</div>');
+
+    last_received = m.id;
     
-    // wait for next
-    setTimeout("get_messages()", 2000);
+    // scroll to bottom
+    if (scroll)
+        $("#chat-messages-container").animate({ scrollTop: $("#chat-messages-container").attr("scrollHeight") }, 500);
 }
 
 /**

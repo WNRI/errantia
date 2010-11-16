@@ -20,6 +20,10 @@
     <script type="text/javascript" src="/static/js/video_reload.js"></script>
     <script type="text/javascript" src="/static/js/slides.js"></script>
     <script type="text/javascript">
+var conf = {}
+
+conf.ws = hookbox.connect('http://velmont.hosted.hookbox.org/');
+
     /* chat_id is passed form the view, the init_chat function then does all the magic */
     $(window).ready(function() {
       init_slides("{{ conf.slug }}", "{{ conf.state }}");

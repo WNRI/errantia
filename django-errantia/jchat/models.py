@@ -14,6 +14,8 @@ For more hardcore uses... a dedicated and specialized application should be bett
 @author: Federico Cáceres <fede.caceres@gmail.com>
 '''
 
+import urllib
+import urllib2
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType, ContentTypeManager 
@@ -57,6 +59,19 @@ class Room(models.Model):
         '''Generic function for adding a message to the chat room'''
         m = Message(room=self, type=type, author=sender, message=message)
         m.save()
+
+        if message == None:
+            message = u""
+
+        payload = urllib.quote_plus('{"id": %d, "author": "%s", "message": "%s", "type": "%s"}' \
+            % (m.pk, sender.encode("utf-8"), message.encode("utf-8"), type,))
+        url = 'http://%s/rest/publish?secret=%s&channel_name=%s&payload=%s' % \
+            ('velmont.hosted.hookbox.org', 'odin-rest', 'errantia-chat:%d' % self.pk, payload,)
+        try:
+            urllib2.urlopen(url).read()
+        except urllib2.HTTPError:
+            pass
+
         return m
     
     def say(self, sender, message):
