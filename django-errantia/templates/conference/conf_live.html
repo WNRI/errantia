@@ -22,7 +22,7 @@
     <script type="text/javascript">
     /* chat_id is passed form the view, the init_chat function then does all the magic */
     $(window).ready(function() {
-      init_slides("{{ conf.slug }}");
+      init_slides("{{ conf.slug }}", "{{ conf.state }}");
       init_chat({{ chat_id }}, "chat-box");
       init_videoreload("video-tag");
     });

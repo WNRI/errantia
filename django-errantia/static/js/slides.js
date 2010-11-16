@@ -7,8 +7,10 @@ var conn;
 var slide_sub;
 var conf_sub;
 
-function init_slides(conf_slug) {
+function init_slides(conf_slug, conf_state) {
     conf.slug = conf_slug;
+    conf.state = conf_state;
+
     get_slides();
 
     conn = hookbox.connect('http://velmont.hosted.hookbox.org/');
