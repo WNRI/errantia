@@ -5,13 +5,14 @@
 
 <div id="function-box">
   <div id="video">
-    <video id="video-tag" src="http://video.knut.s0.no/video.ogv" width="600" height="480" controls="controls" autoplay="autoplay">
+    <video id="video-tag" src="{{ video_url }}" width="600" height="480" controls="controls" autoplay="autoplay">
     <applet code="com.fluendo.player.Cortado.class" archive="http://theora.org/cortado.jar" width="600" height="480">
-      <param name="url" value="http://video.knut.s0.no/video.ogv"/>
+      <param name="url" value="{{ video_url }}"/>
     </applet>
     </video>
   </div>
 
+  {% block chat %}
   <div id="chat">
     <div id="chat-box"></div>
     <!-- You should try to include this at another place at your convenience :D -->
@@ -32,11 +33,14 @@ conf.ws = hookbox.connect('http://velmont.hosted.hookbox.org/');
     });
     </script>
   </div>
+  {% endblock chat %}
 
+  {% block slides %}
   <div id="slides" style="display:none;">
     <div class="valign">
       <img src="{{ conf.conf_image|default:"" }}" id="slide-active">
     </div>
   </div>
+  {% endblock slides %}
 </div>
 {% endblock %}

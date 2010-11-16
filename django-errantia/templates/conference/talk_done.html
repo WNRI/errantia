@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% block title %}<h1>{{ talk.conf }}: {{ talk }}</h1>{% endblock %}
+
+{{ talk.slug }} .. {{ talk.state }}
+
+{% endblock content %}

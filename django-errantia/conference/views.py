@@ -6,7 +6,21 @@ from jchat.models import Room
 
 def show_talk(request, conf_slug, talk_slug):
     talk = get_object_or_404(Talk, conference__slug=conf_slug, slug=talk_slug)
-    return render_to_response('conference/show.html', {'talk': talk,})
+
+    if talk.state == 'wait':
+        template = 'conference/talk_wait.html'
+    elif talk.state == 'live':
+        template = 'conference/talk_live.html'
+        video_url = 'http://video.knut.s0.no/video.ogv'
+    elif talk.state == 'done':
+        template = 'conference/talk_done.html'
+
+    if 'embed' in request.GET:
+        return render_to_response('conference/embed.html',
+            {'talk': talk, 'template': template, })
+    else:
+        return render_to_response(template,
+            {'talk': talk, })
 
 def show_conf(request, conf_slug):
     conf = get_object_or_404(Conference, slug=conf_slug)
@@ -16,6 +30,7 @@ def show_conf(request, conf_slug):
         template = 'conference/conf_wait.html'
     elif conf.state == 'live':
         template = 'conference/conf_live.html'
+        video_url = 'http://video.knut.s0.no/video.ogv'
     elif conf.state == 'done':
         template = 'conference/conf_done.html'
 
