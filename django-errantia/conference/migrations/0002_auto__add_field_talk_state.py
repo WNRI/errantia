@@ -7,13 +7,13 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding field 'Talk.state'
         db.add_column('conference_talk', 'state', self.gf('django.db.models.fields.CharField')(default='wait', max_length=4), keep_default=False)
 
 
     def backwards(self, orm):
-        
+
         # Deleting field 'Talk.state'
         db.delete_column('conference_talk', 'state')
 

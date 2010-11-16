@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 class Command(BaseCommand):
     help = 'Deletes old chat messages. Receives an optional integer parameter setting how old a message has to be to be deleted, if no parameter is passed 1 (one) hour is the default value, all messages older than this are deleted.'
-    
+
     def handle(self, *args, **options):
         if len(args) != 1:
             hours = 1

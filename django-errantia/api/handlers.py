@@ -21,7 +21,7 @@ class SlideNewestHandler(BaseHandler):
     model = Slide
     allowed_methods = ('GET',)
 
-    def read(self, request, conf_slug): 
+    def read(self, request, conf_slug):
         obj = Slide.objects.filter(talk__conference__slug=conf_slug).order_by("-added")[0]
 
         return obj

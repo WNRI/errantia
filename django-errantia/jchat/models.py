@@ -18,8 +18,8 @@ import urllib
 import urllib2
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.contenttypes.models import ContentType, ContentTypeManager 
-from django.contrib.contenttypes import generic 
+from django.contrib.contenttypes.models import ContentType, ContentTypeManager
+from django.contrib.contenttypes import generic
 from datetime import datetime
 
 
@@ -28,13 +28,13 @@ class RoomManager(models.Manager):
     All methods defined here can be invoked through the Room.objects class.
     @see: http://docs.djangoproject.com/en/1.0/topics/db/managers/#topics-db-managers
     Also see GenericTypes from the contenttypes django app!
-    @see: http://docs.djangoproject.com/en/1.0/ref/contrib/contenttypes/''' 
+    @see: http://docs.djangoproject.com/en/1.0/ref/contrib/contenttypes/'''
     def create(self, object):
         '''Creates a new chat room and registers it to the calling object'''
         r = self.model(content_object=object)
         r.save()
         return r
-        
+
     def get_for_object(self, object):
         '''Try to get a room related to the object passed.'''
         return self.get(content_type=ContentType.objects.get_for_model(object), object_id=object.pk)
@@ -54,7 +54,7 @@ class Room(models.Model):
     created = models.DateTimeField(default=datetime.now())
     comment = models.TextField(blank=True, null=True)
     objects = RoomManager() # custom manager
-    
+
     def __add_message(self, type, sender, message=None):
         '''Generic function for adding a message to the chat room'''
         m = Message(room=self, type=type, author=sender, message=message)
@@ -73,19 +73,19 @@ class Room(models.Model):
             pass
 
         return m
-    
+
     def say(self, sender, message):
         '''Say something in to the chat room'''
         return self.__add_message('m', sender, message)
-    
+
     def join(self, user):
         '''A user has joined'''
         return self.__add_message('j', user)
-    
+
     def leave(self, user):
         '''A user has leaved'''
         return self.__add_message('l', user)
-    
+
     def messages(self, after_pk=None, after_date=None):
         '''List messages, after the given id or date'''
         m = Message.objects.filter(room=self)
@@ -94,7 +94,7 @@ class Room(models.Model):
         if after_date:
             m = m.filter(timestamp__gte=after_date)
         return m.order_by('pk')
-    
+
     def last_message_id(self):
         '''Return last message sent to room'''
         m = Message.objects.filter(room=self).order_by('-pk')
@@ -102,10 +102,10 @@ class Room(models.Model):
             return m[0].id
         else:
             return 0
-    
+
     def __unicode__(self):
         return 'Chat for %s %d' % (self.content_type, self.object_id)
-    
+
     class Meta:
         unique_together = (("content_type", "object_id"),)
 
@@ -128,10 +128,10 @@ class Message(models.Model):
     author = models.CharField(max_length=16, blank=True, null=True)
     message = models.CharField(max_length=255, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now=True)
-    
+
     def __unicode__(self):
         '''Each message type has a special representation, return that representation.
-        This will also be translator AKA i18l friendly.''' 
+        This will also be translator AKA i18l friendly.'''
         if self.type == 's':
             return u'SYSTEM: %s' % self.message
         if self.type == 'n':

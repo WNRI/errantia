@@ -113,7 +113,7 @@ width:100%;
         status_p.className = "status";
         status_p.innerHTML = (curslide + 1) + "/" + total;
         container.appendChild(status_p);
-        
+
         controls = document.createElement('div');
         controls.id = "controls";
 
@@ -143,7 +143,7 @@ width:100%;
 
     var update = function() {
         slide_img.src = img_url + "ting-" + curslide + ".png";
-        
+
         status_p.innerHTML = (curslide + 1) + "/" + server_part.part.slides;
         if (server_part.part.active == true) {
              document.getElementById("title").className = "direct";
@@ -240,7 +240,7 @@ width:100%;
             server_slide = vals.part.slide;
             total = vals.part.slides;
 	    logger.debug('Connected frame ' + server_slide + '/' + total);
-            
+
             curslide = server_slide;
 
 	    // Berre init fyrste gong

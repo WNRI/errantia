@@ -7,7 +7,7 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
+
         # Adding model 'Conference'
         db.create_table('conference_conference', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -31,7 +31,7 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        
+
         # Removing unique constraint on 'Talk', fields ['slug', 'conference']
         db.delete_unique('conference_talk', ['slug', 'conference_id'])
 

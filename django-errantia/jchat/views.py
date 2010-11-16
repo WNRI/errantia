@@ -9,7 +9,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
 
 from models import Room, Message
 
@@ -40,20 +40,20 @@ def sync(request):
         raise Http404
 
     r = Room.objects.get(id=post['id'])
-    
-    lmid = r.last_message_id()    
-    
+
+    lmid = r.last_message_id()
+
     return HttpResponse(jsonify({'last_message_id':lmid}))
 
 #@login_required
 def receive(request):
     '''
     Returned serialized data
-    
+
     EXPECTS the following POST parameters:
     id
     offset
-    
+
     This could be useful:
     @see: http://www.djangosnippets.org/snippets/622/
     '''
@@ -63,7 +63,7 @@ def receive(request):
 
     if not post.get('id', None) or not post.get('offset', None):
         raise Http404
-    
+
     try:
         room_id = int(post['id'])
     except:
@@ -73,12 +73,12 @@ def receive(request):
         offset = int(post['offset'])
     except:
         offset = 0
-    
+
     r = Room.objects.get(id=room_id)
 
     m = r.messages(offset)
 
-    
+
     return HttpResponse(jsonify(m, ['id','author','message','type']))
 
 
@@ -111,7 +111,7 @@ def leave(request):
 #@login_required
 def test(request):
     '''Test the chat application'''
-    
+
     u = User.objects.get(id=1) # always attach to first user id
     r = Room.objects.get_or_create(u)
 
@@ -124,7 +124,7 @@ def jsonify(object, fields=None, to_dict=False):
         import json
     except:
         import django.utils.simplejson as json
- 
+
     out = []
     if type(object) not in [dict,list,tuple] :
         for i in object:
