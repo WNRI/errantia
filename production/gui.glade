@@ -218,8 +218,21 @@
                   <object class="GtkHBox" id="hbox3">
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkLabel" id="subtitlelabel">
+                      <object class="GtkExpander" id="expander1">
                         <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <child>
+                          <object class="GtkLabel" id="subtitletext">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">label</property>
+                          </object>
+                        </child>
+                        <child type="label">
+                          <object class="GtkLabel" id="subtitlelabel">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Subtitle</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="position">0</property>
@@ -231,18 +244,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="subtitlecheck">
-                    <property name="label" translatable="yes">Subtitle</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="draw_indicator">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">3</property>
-                  </packing>
+                  <placeholder/>
                 </child>
               </object>
               <packing>
