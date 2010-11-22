@@ -86,6 +86,7 @@ def timer(user_data, sock):
     line = sock.recv(1024)
     if (line):
        sublog.write("%s,%s\n" % (datetime.now(), line,) )
+       sublog.flush()
        user_data.set_property('text', line)
     else:
        user_data.set_property('text', '')
