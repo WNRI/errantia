@@ -44,7 +44,7 @@ demux.
         ! video/x-raw-yuv
         ! ffvideoscale
         ! video/x-raw-yuv,width=500,height=375,pixel-aspect-ratio=1/1
-        ! textoverlay text="Hello" name="overlay" font-desc="Ubuntu 26" line-alignment=left halign=left valign=bottom shaded-background=true xpad=0 ypad=15
+        ! textoverlay text="" name="overlay" font-desc="Ubuntu 26" line-alignment=left halign=left valign=bottom shaded-background=true xpad=0 ypad=15
         ! tee name=preview
         ! ffmpegcolorspace
         ! queue
@@ -87,6 +87,8 @@ def timer(user_data, sock):
     if (line):
        sublog.write("%s,%s\n" % (datetime.now(), line,) )
        user_data.set_property('text', line)
+    else:
+       user_data.set_property('text', '')
     return True
 
 gobject.timeout_add_seconds(1, timer, overlay, sock)
