@@ -31,8 +31,29 @@ def dispatch(environ, start_response):
                      os.path.dirname(__file__), 
                      'sendtext.html')).read()]
 
+# Helper
+def get_ip_addresses():
+    #Use ip route list
+    import subprocess
+    arg='ip route list'
+    p=subprocess.Popen(arg,shell=True,stdout=subprocess.PIPE)
+    data = p.communicate()
+    l = []
+    for d in data:
+        if d == None:
+            continue
+        sdata = d.split()
+        ipaddr = sdata[ sdata.index('src')+1 ]
+        netdev = sdata[ sdata.index('dev')+1 ]
+        l.append( (ipaddr, netdev,) )
+    return l
+
 if __name__ == "__main__":
     # run an example app from the command line            
     listener = eventlet.listen(('0.0.0.0', 7000))
-    print "\nVisit http://localhost:7000/ in your websocket-capable browser.\n"
+    print "\nVisit one of these addresses in your websocket-capable browser:"
+    for ips in get_ip_addresses():
+        print "- http://%s:%d/ (%s)" % (ips[0], 7000, ips[1])
+    print
+
     wsgi.server(listener, dispatch)
