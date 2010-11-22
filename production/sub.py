@@ -12,28 +12,26 @@ import os
 import socket
 import gobject
 from datetime import datetime
+from ConfigParser import SafeConfigParser
 
-COMMFILE = "/tmp/errantia-sub"
-LOGFILE = "sub.log"
+# from least to most important
+configs = ['errantia-default.conf', os.path.expanduser('~/.errantia'), '.errantia', 'errantia.conf',]
+parser = SafeConfigParser()
+found = parser.read(configs)
 
-# If you enable this, you can enter subtitles without the serv.py script.
-# Use this bash-command (if you change COMMFILE, change the path here as well):
-#    while read line; do echo -n "$line " > /tmp/errantia-sub; done
-#
-FIFO=False
+if len(found) == 1:
+    print "\nYou should make an errantia.conf file in one of these locations:"
+    for c in configs[1:]:
+        print "- %s" % c
+    print
 
-if os.path.exists(COMMFILE):
-    os.remove(COMMFILE)
+if os.path.exists(parser.get('subtitle', 'commfile')):
+    os.remove(parser.get('subtitle', 'commfile'))
 
-if FIFO:
-    os.mkfifo(COMMFILE)
-    f = open(COMMFILE, "r")
+sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+sock.bind(parser.get('subtitle', 'commfile'))
 
-else:
-    sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-    sock.bind(COMMFILE)
-
-sublog = open(LOGFILE, "a")
+sublog = open(parser.get('subtitle', 'log'), "a")
 sublog.write("- start %s\n" % datetime.now())
 
 pipeline = gst.parse_launch("""
@@ -68,8 +66,13 @@ preview.
 oggmux name=mux
         ! queue
         ! progressreport update-freq=60
-        ! shout2send ip=video.knut.s0.no port=80 password=sTeodorx2 mount=/video.ogv
-  """)
+        ! shout2send ip=%s port=%s password=%s mount=%s
+  """ % (parser.get('icecast', 'url'),
+         parser.get('icecast', 'port'),
+         parser.get('icecast', 'password'),
+         parser.get('icecast', 'mount'),
+        )
+)
 
 # Let fdsrc collect from stdin
 fdsrc = [a for a in pipeline.iterate_sources()][0]
