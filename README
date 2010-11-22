@@ -1,0 +1,38 @@
+ERRANTIA - open video streaming
+=================================
+
+Errantia is a collection of scripts making up a HTML5 video player with slide
+sync, subtitle texting and chat.
+
+It uses the latest web technologies including ajax push (comet) and html5. It is
+made for streaming seminars and conferences live, facilitating two-way
+communication.
+
+
+There are two parts to Errantia;
+
+* django-errantia which is a web service with chat, html5 video tag and slides.
+* Errantia production which is two python programs for a) streaming live video
+  and b) do live subtitling of the video.
+
+
+How to use Errantia production
+------------------------------
+
+You first need to satisfy the dependencies. Which should be fixed by this in
+Ubuntu:
+
+   sudo apt-get install python-gst0.10 python-eventlet
+
+You should probably copy errantia-default.conf to errantia.conf and make your
+neccesary changes there, to send the video stream to your icecast server. You
+only need to copy what you want to change.
+
+You can also, if you like, save this file in your home folder, as .errantia
+
+Then you can run errantia_prod.sh, to livestream directly from your camera do:
+
+   dvgrab | ./errantia_prod.sh
+
+You can now go to http://localhost:7000 and write some text, it should appear in
+the video.
