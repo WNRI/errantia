@@ -36,3 +36,11 @@ Then you can run errantia_prod.sh, to livestream directly from your camera do:
 
 You can now go to http://localhost:7000 and write some text, it should appear in
 the video.
+
+DVSwitch
+--------
+Errantia is often used in tandem with dvswitch.
+
+You would run it like this;
+
+   dvswitch-command -h 0.0.0.0 -p 12345 -- | ./errantia_prod.sh
