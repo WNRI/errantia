@@ -25,6 +25,10 @@ def dispatch(environ, start_response):
     the path."""
     if environ['PATH_INFO'] == '/data':
         return handle(environ, start_response)
+    elif environ['PATH_INFO'] == '/ajax':
+        sock.send(environ['wsgi.input'].read())
+        start_response('200 OK', [('content-type', 'text/plain')])
+        return ["OK\n"]
     else:
         start_response('200 OK', [('content-type', 'text/html')])
         return [open(os.path.join(
