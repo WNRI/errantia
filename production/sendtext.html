@@ -83,18 +83,35 @@
 <body>
 <script type="text/javascript">
 var data = {};
+
 var ws = null;
+var ajax = null;
+
 var text = null;
 var hist = null;
 
 function send_text(e) {
-  ws.send(text.textContent);
+  if (ws)
+    ws.send(text.textContent);
+  else
+    ajax_send(text.textContent);
+
   data.subs.push(text.textContent);
   render_sub(text.textContent);
 
   text.textContent = "";
 
   return false;
+}
+
+function ajax_send(text) {
+	ajax.open("POST", "/ajax", true);
+
+	ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	ajax.setRequestHeader("Content-length", text.length);
+	ajax.setRequestHeader("Connection", "close");
+
+	ajax.send(text);
 }
 
 function render_sub(sub) {
@@ -123,7 +140,11 @@ function input_keypress(e) {
 }
 
 window.onload = function() {
-  ws = new WebSocket("ws://" + location.host + "/data");
+  if (window.WebSocket)
+    ws = new WebSocket("ws://" + location.host + "/data");
+  else
+    ajax = new XMLHttpRequest();
+
   data.subs = new Array();
 
   text = document.getElementById("fancyinput");
