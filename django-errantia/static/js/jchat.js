@@ -24,6 +24,12 @@ function init_chat(chat_id, html_el_id)
         {
 	    chat_conn = subscription;
 	    chat_conn.onPublish = got_msg;
+
+            for (var a in chat_conn.history) {
+                if (chat_conn.history[a][0] != "PUBLISH")
+                    continue;
+                got_msg(chat_conn.history[a][1]);
+            }
         }
         console.log("Kopla til " + ch_name);
     }
@@ -85,6 +91,7 @@ function layout_and_bind(html_el_id) {
 
             return false;
     });
+
 };
 
 function send_msg() {
@@ -111,7 +118,7 @@ function send_msg() {
  */
 function got_msg(frame)
 {
-    m = frame.payload;
+    var m = frame.payload;
     var scroll = false;
 
     // first check if we are at the bottom of the div, if we are, we shall scroll once the content is added
