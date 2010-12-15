@@ -17,6 +17,12 @@ class SlideHandler(BaseHandler):
        else:
            raise FormValidationError(form)
 
+    def read(self, request, talk__conference__slug):
+        talk = Talk.objects.filter(conference__slug=talk__conference__slug).order_by("-added")[0]
+        obj = Slide.objects.filter(talk=talk).order_by("-added")
+
+        return obj
+
 class SlideNewestHandler(BaseHandler):
     model = Slide
     allowed_methods = ('GET',)
