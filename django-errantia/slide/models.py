@@ -23,7 +23,7 @@ class Slide(models.Model):
 
         payload = urllib.quote_plus('{"slide": "%s", "num": %d}' % (self.slide.url, self.num,))
         url = 'http://%s/rest/publish?secret=%s&channel_name=%s&payload=%s' % \
-            ('velmont.hosted.hookbox.org', 'odin-rest', 'errantia-slides', payload,)
+            ('errantia.org:8001', 'v3lm0nt-r3st', 'errantia-slides', payload,)
         try:
             print urllib2.urlopen(url).read()
         except urllib2.HTTPError:

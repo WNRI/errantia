@@ -66,7 +66,7 @@ class Room(models.Model):
         payload = urllib.quote_plus('{"id": %d, "author": "%s", "message": "%s", "type": "%s"}' \
             % (m.pk, sender.encode("utf-8"), message.encode("utf-8"), type,))
         url = 'http://%s/rest/publish?secret=%s&channel_name=%s&payload=%s' % \
-            ('velmont.hosted.hookbox.org', 'odin-rest', 'errantia-chat:%d' % self.pk, payload,)
+            ('errantia.org:8001', 'v3lm0nt-r3st', 'errantia-chat:%d' % self.pk, payload,)
         try:
             urllib2.urlopen(url).read()
         except urllib2.HTTPError:
