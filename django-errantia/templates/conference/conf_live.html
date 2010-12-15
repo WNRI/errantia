@@ -16,14 +16,14 @@
   <div id="chat">
     <div id="chat-box"></div>
     <!-- You should try to include this at another place at your convenience :D -->
-    <script type="text/javascript" src="http://velmont.hosted.hookbox.org/static/hookbox.js"></script>
+    <script type="text/javascript" src="/static/js/hookbox.js"></script>
     <script type="text/javascript" src="/static/js/jchat.js"></script>
     <script type="text/javascript" src="/static/js/video_reload.js"></script>
     <script type="text/javascript" src="/static/js/slides.js"></script>
     <script type="text/javascript">
 var conf = {}
 
-conf.ws = hookbox.connect('http://velmont.hosted.hookbox.org/');
+conf.ws = hookbox.connect('http://errantia.org:8001/');
 
     /* chat_id is passed form the view, the init_chat function then does all the magic */
     $(window).ready(function() {
