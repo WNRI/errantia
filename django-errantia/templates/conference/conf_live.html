@@ -4,6 +4,7 @@
 {% block title %}<h1>{{ conf }}</h1>{% endblock %}
 
 <div id="function-box">
+  {% block videobox %}
   <div id="video">
     <video id="video-tag" src="{{ video_url }}" width="600" height="480" controls="controls" autoplay="autoplay">
     <applet code="com.fluendo.player.Cortado.class" archive="http://theora.org/cortado.jar" width="600" height="480">
@@ -11,6 +12,7 @@
     </applet>
     </video>
   </div>
+  {% endblock videobox %}
 
   {% block chat %}
   <div id="chat">
