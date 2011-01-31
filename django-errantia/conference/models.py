@@ -15,6 +15,9 @@ class Conference(models.Model):
     ending = models.DateTimeField(null=True, blank=True)
     added = models.DateTimeField(auto_now_add=True)
 
+    def get_absolute_url(self):
+        return reverse('errantia:show_conf', self.slug)
+
     def __unicode__(self):
         return self.title
 
@@ -30,6 +33,10 @@ class Talk(models.Model):
 
     class Meta:
         unique_together = (("slug", "conference"),)
+
+    def get_absolute_url(self):
+        return reverse('errantia:show_talk', args=(self.conference.slug,
+            self.slug,))
 
     def __unicode__(self):
         return self.title

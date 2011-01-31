@@ -31,6 +31,9 @@ class Slide(models.Model):
 
         super(Slide, self).save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return self.slide.url
+
     def __unicode__(self):
         return u'%s:%d' % (self.talk, self.num)
 
