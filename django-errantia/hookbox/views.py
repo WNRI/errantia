@@ -8,7 +8,7 @@ def connect(request):
 
 @csrf_exempt
 def create_channel(request):
-    return HttpResponse('[true, {"history_size": 10}]')
+    return HttpResponse('[true, {"history_size": 40}]')
 
 @csrf_exempt
 def subscribe(request):
