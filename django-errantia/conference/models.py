@@ -11,6 +11,8 @@ class Conference(models.Model):
     slug = models.SlugField(unique=True)
     conf_image = models.URLField(null=True, blank=True)
     state = models.CharField(max_length=4, choices=STATES, default="wait")
+    starting = models.DateTimeField(null=True, blank=True)
+    ending = models.DateTimeField(null=True, blank=True)
     added = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -22,6 +24,8 @@ class Talk(models.Model):
     slug = models.SlugField()
     conference = models.ForeignKey(Conference)
     state = models.CharField(max_length=4, choices=STATES, default="wait")
+    starting = models.DateTimeField(null=True, blank=True)
+    ending = models.DateTimeField(null=True, blank=True)
     added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
