@@ -43,12 +43,12 @@ demux.
         ! dvdec quality=5
         ! video/x-raw-yuv
         ! ffvideoscale
-        ! video/x-raw-yuv,width=500,height=375,pixel-aspect-ratio=1/1
+        ! video/x-raw-yuv,width={w},height={h},fps={fps},pixel-aspect-ratio=1/1
         ! textoverlay text="" name="overlay" font-desc="Ubuntu 26" line-alignment=left halign=left valign=bottom shaded-background=true xpad=0 ypad=15
         ! tee name=preview
         ! ffmpegcolorspace
         ! queue
-        ! theoraenc bitrate=200 keyframe-force=64
+        ! theoraenc bitrate={t_rate} keyframe-force=64
         ! queue
         ! mux.
 demux.
@@ -57,7 +57,7 @@ demux.
         ! audioconvert
         ! audio/x-raw-float,channels=1
         ! queue
-        ! vorbisenc max-bitrate=36864
+        ! vorbisenc max-bitrate={v_rate}000
         ! queue
         ! mux.
 preview.
@@ -66,12 +66,18 @@ preview.
 oggmux name=mux
         ! queue
         ! progressreport update-freq=60
-        ! shout2send ip=%s port=%s password=%s mount=%s
-  """ % (parser.get('icecast', 'url'),
-         parser.get('icecast', 'port'),
-         parser.get('icecast', 'password'),
-         parser.get('icecast', 'mount'),
-        )
+        ! shout2send ip={url} port={port} password={pw} mount={mnt}
+  """.format(
+      w=parser.get('gst', 'width'),
+      h=parser.get('gst', 'height'),
+      fps=parser.get('gst', 'fps'),
+      t_rate=parser.get('gst', 'theora_bitrate'),
+      v_rate=parser.get('gst', 'vorbis_bitrate'),
+      url=parser.get('icecast', 'url'),
+      port=parser.get('icecast', 'port'),
+      pw=parser.get('icecast', 'password'),
+      mnt=parser.get('icecast', 'mount'),
+      )
 )
 
 # Let fdsrc collect from stdin
