@@ -22,7 +22,8 @@ How to use Errantia production
 You first need to satisfy the dependencies. Which should be fixed by this in
 Ubuntu:
 
-   sudo apt-get install python-gst0.10 python-eventlet
+   sudo apt-get install python-gst0.10 python-eventlet python-pip
+   sudo pip install pysrt
 
 You should probably copy errantia-default.conf to errantia.conf and make your
 neccesary changes there, to send the video stream to your icecast server. You
@@ -36,6 +37,50 @@ Then you can run errantia_prod.sh, to livestream directly from your camera do:
 
 You can now go to http://localhost:7000 and write some text, it should appear in
 the video.
+
+Logging of subtitle text
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The default log file is "sub.log". This file is appended to if it already
+exists. Often you'd want to convert this log to an SRT-file so you can show the
+subtitles later alongside the video.
+
+To do this, you may use "sublog_to_srt.py". First of all, you may need to clean
+up your log file. You only want one start line, and you want to change it to
+the time when your video start.
+
+If you have cut up several videos, you have to cut up the log into several logs
+that correspond to the video clips. Or you may edit the srt-file afterwards,
+whatever you feel is easiest.
+
+So, if your sub.log-file looks like this:
+
+
+- start 2010-11-22 15:34:47.346544
+2010-11-22 15:34:52.576234,Test
+2010-11-22 15:34:55.024808,Yes, it works!
+- start 2011-02-01 08:45:00.000000
+2011-02-01 08:45:10.000000,The conference starts in 15 minutes!
+2011-02-01 09:00:00.000000,Welcome to this conference!
+2011-02-01 09:00:30.000000,First speaker is John Smith.
+
+
+Let's say you started recording the video file you want to make a SRT-file for
+exactly 09:00, so you want to first remove everything above that time point,
+and you want to change the - start line so that it starts at the same time as
+the video. Like this:
+
+
+- start 2011-02-01 09:00:00.000000
+2011-02-01 09:00:00.000000,Welcome to this conference!
+2011-02-01 09:00:30.000000,First speaker is John Smith.
+
+
+When you have a nice log, (e.g. myconference.sublog) you may run
+sublog_to_srt.py on it, like this:
+
+    ./sublog_to_srt.py myconference.sublog > myconf.srt
+
 
 DVSwitch
 --------
