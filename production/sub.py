@@ -91,11 +91,12 @@ def timer(user_data, sock):
     # Blocking here, waiting for text via socket
     line = sock.recv(1024)
     if (line):
-       sublog.write("%s,%s\n" % (datetime.now(), line,) )
-       sublog.flush()
-       user_data.set_property('text', line)
+        sublog.write("%s,%s\n" % (datetime.now().strftime( \
+                '%Y-%m-%d %H:%M:%S.%f'), line,) )
+        sublog.flush()
+        user_data.set_property('text', line)
     else:
-       user_data.set_property('text', '')
+        user_data.set_property('text', '')
     return True
 
 gobject.timeout_add_seconds(1, timer, overlay, sock)
