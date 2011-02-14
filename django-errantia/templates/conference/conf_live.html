@@ -25,7 +25,7 @@
     <script type="text/javascript">
 var conf = {}
 
-conf.ws = hookbox.connect('http://errantia.org:8001/');
+conf.ws = hookbox.connect('{{ hookbox_url }}');
 
     /* chat_id is passed form the view, the init_chat function then does all the magic */
     $(window).ready(function() {
