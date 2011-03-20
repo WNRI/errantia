@@ -3,3 +3,4 @@ PIL>=1.1.7
 django-piston>=0.2.2
 flup>=1.0.2
 South>=0.7.2
+hookbox
