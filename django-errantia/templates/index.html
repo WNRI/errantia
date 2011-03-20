@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Konferansar</h1>
+
+{% for o in objects %}
+ <a href="{{ o.get_absolute_url }}">{{ o.title }}</a>
+{% endfor %}
+
+{% endblock %}

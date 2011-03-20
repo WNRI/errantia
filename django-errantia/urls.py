@@ -6,11 +6,12 @@ from django.conf import settings
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^$', 'django.views.generic.simple.redirect_to', {'url':'/live/clim-atic-2010/', 'permanent': False}),
+    #(r'^$', 'django.views.generic.simple.redirect_to', {'url':'/live/clim-atic-2010/', 'permanent': False}),
     (r'^hookbox/', include('hookbox.urls')),
     (r'^conf/', include('conference.urls')),
     (r'^chat/', include('jchat.urls')),
     (r'^api/', include('api.urls')),
+    (r'^$', 'conference.views.index'),
 
     (r'^admin/', include(admin.site.urls)),
 

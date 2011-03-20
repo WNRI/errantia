@@ -17,8 +17,9 @@ class Conference(models.Model):
     ending = models.DateTimeField(null=True, blank=True)
     added = models.DateTimeField(auto_now_add=True)
 
+    @models.permalink
     def get_absolute_url(self):
-        return reverse('show_conf', args=(self.slug,))
+        return ('show_conf', [self.slug])
 
     def __unicode__(self):
         return self.title

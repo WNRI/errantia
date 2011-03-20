@@ -5,6 +5,10 @@ from django.conf import settings
 from conference.models import Conference, Talk
 from jchat.models import Room
 
+def index(request):
+    objects = Conference.objects.exclude(state='done')
+    return render_to_response('index.html', {'objects': objects})
+
 def show_talk(request, conf_slug, talk_slug):
     talk = get_object_or_404(Talk, conference__slug=conf_slug, slug=talk_slug)
 
