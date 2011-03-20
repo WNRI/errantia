@@ -89,3 +89,29 @@ Errantia is often used in tandem with dvswitch.
 You would run it like this;
 
    dvsink-command -h 0.0.0.0 -p 12345 -- ./errantia_prod.sh
+
+
+
+django-errantia
+---------------
+
+This is if you want to set up django-errantia yourself, and not use a hosted
+install like e.g. http://errantia.org/.
+
+Go into the folder. Set your settings in settings.py.
+Optionally make a virtualenv to store the requirements:
+
+$ virtualenv env
+$ . env/bin/activate
+
+Then install the dependencies/requirements:
+
+$ pip -r pip.requirements
+
+Make your database:
+
+$ ./manage.py syncdb
+
+Then you should start hookbox in it's own terminal:
+
+$ hookbox
