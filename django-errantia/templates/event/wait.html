@@ -1,0 +1,12 @@
+{% extends "conference/conf_live.html" %}
+
+{% block videobox %}
+  <div id="video">
+    <h1>{% if event.waiting_teaser %}
+        {{ event.waiting_teaser|safe }}
+    {% else %}
+        Sending startar <strong>{{ event.starting }}</strong>
+    {% endif %}
+    </h1>
+  </div>
+{% endblock %}
