@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% block title %}<h1>{{ conf }}</h1>{% endblock %}
+
+<div id="function-box">
+  {% block videobox %}
+  <div id="video">
+    <h2 id=info>{% if event.waiting_teaser %}
+        {{ event.waiting_teaser|safe }}
+    {% else %}
+        Sending startar <strong>{{ event.starting }}</strong>
+    {% endif %}
+    </h2>
+    <video id="video-tag" src="{{ event.video_url }}" width="600" height="450" controls="controls" autoplay="autoplay">
+    <applet code="com.fluendo.player.Cortado.class" archive="http://theora.org/cortado.jar" width="600" height="450">
+      <param name="url" value="{{ event.video_url }}"/>
+      <p>Netlesaren din stør ikkje video. Du kann prøva å sjå straumen direkte i t.d.
+        <a href="http://videolan.org">VLC</a>.</p>
+      <p><a href="{{ event.video_url }}">{{ event.video_url }}</a></p>
+    </applet>
+    </video>
+  </div>
+  {% endblock videobox %}
+
+  {% block chat %}
+  <div id="chat">
+    <div id="chat-box"></div>
+    <!-- You should try to include this at another place at your convenience :D -->
+    <script type="text/javascript" src="/static/js/hookbox.min.js"></script>
+    <script type="text/javascript" src="/static/js/jchat.js"></script>
+    <script type="text/javascript" src="/static/js/video_reload.js"></script>
+    <script type="text/javascript" src="/static/js/slides.js"></script>
+    <script type="text/javascript">
+var conf = {}
+
+conf.ws = hookbox.connect('{{ hookbox_url }}');
+
+    /* chat_id is passed form the view, the init_chat function then does all the magic */
+    $(window).ready(function() {
+      init_slides("{{ conf.slug }}", "{{ conf.state }}");
+      init_chat({{ chat_id }}, "chat-box");
+      init_videoreload("video-tag");
+    });
+    </script>
+  </div>
+  {% endblock chat %}
+
+  {% block slides %}
+  <div id="slides" style="display:none;">
+    <div class="valign">
+      <img src="{{ conf.conf_image|default:"" }}" id="slide-active">
+    </div>
+  </div>
+  {% endblock slides %}
+</div>
+{% endblock %}
