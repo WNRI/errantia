@@ -95,6 +95,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'jchat',
     'conference',
+    'event',
     'slide',
     'piston',
     'south',
