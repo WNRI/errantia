@@ -13,7 +13,6 @@ def detail(request, event_slug):
     event = get_object_or_404(Event, slug=event_slug)
     chat = Room.objects.get_or_create(event)
     ctx = {'event': event, 'chat_id': chat.id,
-            'video_url': settings.ERRANTIA_VIDEO_STREAM,
             'hookbox_url': settings.ERRANTIA_HOOKBOX_INSTALL,}
 
     if event.state == 'wait':
