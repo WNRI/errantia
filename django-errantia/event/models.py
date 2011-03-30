@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.core.urlresolvers import reverse
 
 
@@ -20,6 +21,7 @@ class Event(models.Model):
     waiting_teaser = models.TextField(null=True, blank=True)
 
     hashtag = models.CharField(max_length=16, null=True, blank=True)
+    video_url = models.URLField(default=settings.ERRANTIA_VIDEO_STREAM)
 
     def get_absolute_url(self):
         return reverse('show_event', args=(self.slug,))
