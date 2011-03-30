@@ -16,15 +16,15 @@ def detail(request, event_slug):
             'video_url': settings.ERRANTIA_VIDEO_STREAM,
             'hookbox_url': settings.ERRANTIA_HOOKBOX_INSTALL,}
 
-    if conf.state == 'wait':
+    if event.state == 'wait':
         ctx['template'] = 'event/wait.html'
-    elif conf.state == 'live':
+    elif event.state == 'live':
         ctx['template'] = 'event/live.html'
-    elif conf.state == 'done':
+    elif event.state == 'done':
         ctx['template'] = 'event/done.html'
 
     if 'embed' in request.GET:
-        return render_to_response('event/embed.html',
+        return render_to_response('embed.html',
             ctx)
     else:
         return render_to_response(ctx['template'],
