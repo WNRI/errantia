@@ -1,7 +1,10 @@
 {% extends "base.html" %}
+{% load markup %}
 
 {% block content %}
-{% block title %}<h1>{{ conf }}</h1>{% endblock %}
+{% block title %}<h1>{{ event }}</h1>{% endblock %}
+
+{% block description %}<div class=description>{{ event.description|markdown }}</div>{% endblock %}
 
 <div id="function-box">
   {% block videobox %}
