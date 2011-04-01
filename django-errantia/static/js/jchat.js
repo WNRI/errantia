@@ -131,10 +131,10 @@ function got_msg(frame)
         $('#chat-messages').append('<div class="system">' + replace_emoticons(m.message) + '</div>');
     else if (m.type == 'm')
         $('#chat-messages').append('<div class="message"><div class="author">'+m.author+'</div>'+replace_emoticons(m.message) + '</div>');
-    else if (m.type == 'j')
+/*    else if (m.type == 'j')
         $('#chat-messages').append('<div class="join">'+m.author+' has joined</div>');
     else if (m.type == 'l')
-        $('#chat-messages').append('<div class="leave">'+m.author+' has left</div>');
+        $('#chat-messages').append('<div class="leave">'+m.author+' has left</div>');*/
 
     last_received = m.id;
     
