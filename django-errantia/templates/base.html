@@ -3,7 +3,7 @@
   <meta charset="utf-8">
   <title>Errantia</title>
   <style type="text/css">
-    html * { padding:0; margin:0; }
+    html * { padding:0; margin:0; font-family: "Ubuntu", "Arial", sans-serif; }
     body * { padding:10px 20px; }
     body * * { padding:0; }
     body { width: 960px; margin: 0 auto; }
@@ -60,10 +60,10 @@ text-shadow: 0 0 3px #000;
 position: absolute;
 top: 0;
 left: 0;
-height: 250px;
+height: 100%;
 }
 #slides {
-display: table;
+display: none;
 position: absolute;
 top: 250px;
 left: 0;
@@ -80,28 +80,37 @@ overflow:hidden;
 width: 360px;
 }
 #chat-messages-container {
-height: 220px; /* 192 - 25 */
+height: 406px;
 overflow: auto; /* used for scrolling */
 font: 9pt "Arial", sans-serif;
+}
+#chat-messages .message {
+background: #efe;
+border: 1px solid #aca;
+border-radius: 5px;
+margin: 10px 5px;
+padding: 5px;
+box-shadow: 0 5px 6px -5px #aaa;
 }
 #chat-form {
 position: absolute;
 bottom: 0;
-width: 356px;
-padding: 3px 0 0 3px;
-height: 22px;
-background: #DCEAF4;
-border-top: 1px solid #464;
+width: 345px;
+padding: 8px 0 8px 16px;
+background: #D1F3D1;
+border-top: 1px solid #ccc;
 }
-#chat .message {
-border: 0;
-background: transparent;
+input.message {
+border: 1px solid #666;
+border-radius: 4px;
+box-shadow: 1px 1px 4px #999 inset;
+font-size: 1.2em;
+width: 270px;
+padding: 5px;
 }
 #chat-form input + input {
-position: absolute;
-right: 5px;
-border: 0;
-background-color: transparent;
+margin-left: 5px;
+width: 50px;
 }
 #slides img {
 background-color: #ccc;

@@ -70,7 +70,7 @@ function layout_and_bind(html_el_id) {
         '<div id="chat-last"> </div>'+
         '</div>'+
         '<form id="chat-form">'+
-        '<input name="message" type="text" class="message" />'+
+        '<input name="message" type="text" class="message" placeholder="Skriv tekst her" />'+
         '<input type="submit" value="Send"/>'+
         '</form>';
         
