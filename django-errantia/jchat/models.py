@@ -63,14 +63,16 @@ class Room(models.Model):
         if message == None:
             message = u""
 
-        payload = urllib.quote_plus('{"id": %d, "author": "%s", "message": "%s", "type": "%s"}' \
-            % (m.pk, sender.encode("utf-8"), message.encode("utf-8"), type,))
-        url = 'http://%s/rest/publish?secret=%s&channel_name=%s&payload=%s' % \
-            ('errantia.org:8001', 'v3lm0nt-r3st', 'errantia-chat:%d' % self.pk, payload,)
-        try:
-            urllib2.urlopen(url).read()
-        except urllib2.HTTPError:
-            pass
+        if type == 'm':
+            payload = urllib.quote_plus('{"id": %d, "author": "%s", "message": "%s", \
+                "type": "%s", "timestamp": "%s"}' \
+                % (m.pk, sender.encode("utf-8"), message.encode("utf-8"), type, m.timestamp))
+            url = 'http://%s/rest/publish?secret=%s&channel_name=%s&payload=%s' % \
+                ('errantia.org:8001', 'v3lm0nt-r3st', 'errantia-chat:%d' % self.pk, payload,)
+            try:
+                urllib2.urlopen(url).read()
+            except urllib2.HTTPError:
+                pass
 
         return m
 
@@ -97,7 +99,7 @@ class Room(models.Model):
 
     def last_message_id(self):
         '''Return last message sent to room'''
-        m = Message.objects.filter(room=self).order_by('-pk')
+        m = Message.objects.filter(room=self, type='m').order_by('-pk')
         if m:
             return m[0].id
         else:
