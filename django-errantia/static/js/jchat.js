@@ -130,7 +130,22 @@ function got_msg(frame)
     if (m.type == 's')
         $('#chat-messages').append('<div class="system">' + replace_emoticons(m.message) + '</div>');
     else if (m.type == 'm')
-        $('#chat-messages').append('<div class="message"><div class="author">'+m.author+'</div>'+replace_emoticons(m.message) + '</div>');
+    {
+        if (m.message.substr(0, 1) === '/') {
+            /* Command */
+            if (m.message.substr(0, 7) == '/banner') {
+                text = m.message.substr(8, m.message.length);
+                if (text) {
+                    $("#info").html(text);
+                    $("#info").css("display", "block");
+                }
+                else
+                    $("#info").css("display", "none");
+            }
+        }
+        else
+            $('#chat-messages').append('<div class="message"><div class="author">'+m.author+'</div>'+replace_emoticons(m.message) + '</div>');
+    }
 /*    else if (m.type == 'j')
         $('#chat-messages').append('<div class="join">'+m.author+' has joined</div>');
     else if (m.type == 'l')
