@@ -144,7 +144,11 @@ function got_msg(frame)
             }
         }
         else
-            $('#chat-messages').append('<div class="message"><div class="author">'+m.author+'</div>'+replace_emoticons(m.message) + '</div>');
+        {
+            datetime = m.timestamp.replace(" ", "T").substr(0, 16) + "+02:00";
+            time = m.timestamp.substr(11,5);
+            $('#chat-messages').append('<div class="message"><time datetime="'+datetime+'">'+time+'</time> <cite class="author">'+m.author+'</cite>'+replace_emoticons(m.message) + '</div>');
+        }
     }
 /*    else if (m.type == 'j')
         $('#chat-messages').append('<div class="join">'+m.author+' has joined</div>');
