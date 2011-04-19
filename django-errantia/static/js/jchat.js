@@ -31,6 +31,7 @@ function init_chat(chat_id, html_el_id)
                 got_msg(chat_conn.history[a][1]);
             }
         }
+        $("#chat").delay(1000).removeClass('hide');
         console.log("Kopla til " + ch_name);
     }
     layout_and_bind(html_el_id);
@@ -141,6 +142,15 @@ function got_msg(frame)
                 }
                 else
                     $("#info").css("display", "none");
+            }
+            else if (m.message.substr(0, 6) == '/topic') {
+                text = m.message.substr(7, m.message.length);
+                if (text) {
+                    $("h1.chat-topic").html(text);
+                    $("h1.chat-topic").removeClass("hide").show();
+                }
+                else
+                    $("h1.chat-topic").toggle();
             }
         }
         else
