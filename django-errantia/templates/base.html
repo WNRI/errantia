@@ -72,8 +72,29 @@ left: 15px;
 height: 95%;
 border: 1px solid #bcb;
 border-radius: 5px 0 0 5px;
-background: -moz-linear-gradient(center bottom , #e5efe5, #FAFAFA 20%, #F5FaF5 100%);
+background: -moz-linear-gradient(center bottom , #e5efe5, #FAFAFA 20%, #F5FaF5 100%) #fafafa;
 box-shadow: 0 0 5px #ddd;
+opacity: 1;
+transition: opacity 1s, left 1s;
+-moz-transition: opacity 1s, left 1s;
+-webkit-transition: opacity 1s, left 1s;
+-o-transition: opacity 1s, left 1s;
+-ie-transition: opacity 1s, left 1s;
+}
+#chat.hide {
+left: 50px;
+opacity: 0;
+}
+.chat-topic, #chat-form {
+    background-color: #afa;
+    background: -moz-linear-gradient(center top , #AAFFAA, #88CC88 85%, #558855 110%) repeat scroll 0 0 #AAFFAA;
+    border-radius: 5px 0 0 0;
+    color: #115511;
+    font-size: 13pt;
+    overflow: hidden;
+    padding: 5px;
+    text-align: center;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8), 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
 #slides {
 display: none;
@@ -93,8 +114,8 @@ overflow:hidden;
 width: 360px;
 }
 #chat-messages-container {
-height: 406px;
-overflow: auto; /* used for scrolling */
+height: 340px; width: 335px;
+overflow-y: scroll; /* used for scrolling */
 font: 9pt "Arial", sans-serif;
 }
 #chat-messages .message {
@@ -112,22 +133,32 @@ color: #8a8;
 #chat-form {
 position: absolute;
 bottom: 0;
-width: 345px;
-padding: 8px 0 8px 16px;
-background: #D1F3D1;
-border-top: 1px solid #ccc;
+width: 100%;
+padding: 8px 0;
+border-radius: 0 0 0 5px;
+background-color: #8d8;
+background: -moz-linear-gradient(center bottom , #7a7, #8d8 88%, #558855 100%) repeat scroll 0 0 #afa;
+/*background: #D1F3D1;
+border-top: 1px solid #ccc;*/
 }
 input.message {
-border: 1px solid #666;
-border-radius: 4px;
-box-shadow: 1px 1px 4px #999 inset;
-font-size: 1.2em;
-width: 245px;
-padding: 5px;
+    border: 1px none;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 1px 1px 3px #666666 inset, 1px 1px 1px #FFFFFF;
+    font-size: 1.2em;
+    padding: 5px;
+    width: 245px;
+    margin: 2px 0;
 }
 #chat-form input + input {
-margin-left: 5px;
-width: 50px;
+    background: -moz-linear-gradient(center top , #FFFFFF, #AAAAAA) repeat scroll 0 0 #CCCCCC;
+    border: medium none;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 1px 1px #224422, 0 0 3px #FFFFFF inset;
+    margin-left: 9px;
+    padding: 2px 0;
+    text-shadow: 0 1px 1px #FFFFFF;
+    width: 50px;
 }
 #slides img {
 background-color: #ccc;
